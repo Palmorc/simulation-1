@@ -20,21 +20,31 @@ class App extends Component {
 
 
     this.state = {
-      games = {
-        name : '',
-        developer :''
-        price : ,
-        rating : ,
-        image_url : '', 
-      }
+      games : []
     }
   }
+  componentDidMount(){
+    axios.get(`/api/games`).then( res=>{
+      this.setState({
+        games : res.data
+      })
+    })
+  }
+
+  deleteGame = (element) =>{
+    const { id } = element
+    axios.delete(`/api/game/${id}`).then( res=>{
+      this.setState({ games: res.data })
+    } )
+  }
+
+
   render() {
     return (
       <div className="App">
-        <input/>
-        <input/>
-        <input/>
+        <AddGame appGame = {(res) => this.setState({ games : res.data })}/>
+        <h1> Games </h1>
+        <GameList gameList = {this.state.games} deleteGame={this.deleteGame}/>
       </div>
     );
   }
